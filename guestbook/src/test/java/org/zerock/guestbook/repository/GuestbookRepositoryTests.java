@@ -22,29 +22,29 @@ public class GuestbookRepositoryTests {
     @Autowired
     private GuestbookRepository guestbookRepository;
 
-//    @Test
-//    public void insertDummies(){
-//        IntStream.rangeClosed(1,300).forEach(i -> {
-//            Guestbook guestbook = Guestbook.builder().title("Title...."+i)
-//                .content("Content..."+i)
-//                .writer("user"+(i%10))
-//                .build();
-//            System.out.println(guestbookRepository.save(guestbook));
-//        });
-//    }
-//
-//    @Test
-//    public void updateTest() {
-//        Optional<Guestbook> result= guestbookRepository.findById(300L);
-//
-//        if(result.isPresent()){
-//            Guestbook guestbook = result.get();
-//            guestbook.chageTitle("Changed Titled....");
-//            guestbook.changeContent("Changed Content...");
-//
-//            guestbookRepository.save(guestbook);
-//        }
-//    }
+    @Test
+    public void insertDummies(){
+        IntStream.rangeClosed(1,300).forEach(i -> {
+            Guestbook guestbook = Guestbook.builder().title("Title...."+i)
+                .content("Content..."+i)
+                .writer("user"+(i%10))
+                .build();
+            System.out.println(guestbookRepository.save(guestbook));
+        });
+    }
+
+    @Test
+    public void updateTest() {
+        Optional<Guestbook> result= guestbookRepository.findById(300L);
+
+        if(result.isPresent()){
+            Guestbook guestbook = result.get();
+            guestbook.chageTitle("Changed Titled....");
+            guestbook.changeContent("Changed Content...");
+
+            guestbookRepository.save(guestbook);
+        }
+    }
 
     @Test
     public void testQuery1() {
