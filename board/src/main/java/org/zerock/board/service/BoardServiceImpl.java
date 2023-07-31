@@ -7,18 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.board.dto.BoardDTO;
 import org.zerock.board.dto.PageRequestDTO;
 import org.zerock.board.dto.PageResultDTO;
 import org.zerock.board.entity.Board;
 import org.zerock.board.entity.Member;
 import org.zerock.board.repository.BoardRepository;
+import org.zerock.board.repository.ReplyRepository;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository repository;
+    private final ReplyRepository replyRepository;
     @Override
     public Long register(BoardDTO dto) {
         log.info(dto);
@@ -36,4 +39,29 @@ public class BoardServiceImpl implements BoardService {
         );
         return new PageResultDTO<>(result, fn);
     }
+
+    @Override
+    public BoardDTO get(Long bno) {
+        Object result = repository.getBoardByBno(bno);
+        Object[] arr = (Object[]) result;
+        return entityToDTO((Board) arr[0], (Member) arr[1], (Long) arr[2]);
+    }
+
+    @Transactional
+    @Override
+    public void removeWithReplies(Long bno) {
+        replyRepository.deleteByBno(bno);
+        repository.deleteById(bno);
+    }
+
+    @Override
+    public void modify(BoardDTO boardDTO) {
+        Board board = repository.findById(boardDTO.getBno()).get();
+
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
+
+        repository.save(board);
+    }
 }
+
